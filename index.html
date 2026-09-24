@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#1D2A2E">
+<title>Mochimo Explorer</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22#1D2A2E%22/%3E%3Cpath fill=%22#15DC96%22 transform=%22translate(10.00 10.56) scale(0.2447)%22 d=%22M89.9 166.7C65.7 166.7 43.9 156.4 29 140.1L150.8 140.1C135.9 156.4 114.1 166.7 89.9 166.7M83.1 8.8L70.9 34.4L46.1 34.4C39.1 34.4 33.3 40.2 33.3 47.2L33.3 131.6L22.2 131.6C13.6 119 8.5 103.9 8.5 87.6C8.5 46.2 41.4 12.1 83.1 8.8M110.4 42.9L133.6 42.9C136 42.9 138 44.8 138 47.2L138 131.6L110.4 131.6ZM77.8 42.9L101.9 42.9L101.9 131.6L77.8 131.6ZM41.8 131.6L41.8 47.2C41.8 44.8 43.8 42.9 46.1 42.9L69.4 42.9L69.4 131.6ZM171.3 87.6C171.3 103.9 166.2 119 157.5 131.6L146.4 131.6L146.4 47.2C146.4 40.2 140.7 34.4 133.6 34.4L80.3 34.4L92.5 8.5C136.2 9.9 171.3 44.8 171.3 87.6M153.4 25.6C136.4 9.1 113.9 0 89.9 0C65.9 0 43.3 9.1 26.4 25.6C9.4 42.2 0 64.2 0 87.6C0 111 9.4 133.1 26.4 149.6C43.3 166.1 65.9 175.2 89.9 175.2C113.9 175.2 136.4 166.1 153.4 149.6C170.4 133.1 179.8 111 179.8 87.6C179.8 64.2 170.4 42.2 153.4 25.6%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Poppins:ital,wght@0,400;1,300&display=swap">
+<style>
+/* Mochimo brand palette (Brand Guidelines 2025, p.12)
+   primary:   #15DC96 mint · #1D2A2E slate · #FFFFFF
+   secondary: #10B078 mint-deep · #172124 slate-deep · #DDDDDD
+   Everything else below is a tint/shade of these. */
+:root{
+  --mint:#15DC96; --mint-deep:#10B078; --slate:#1D2A2E; --slate-deep:#172124; --grey:#DDDDDD;
+  --display:Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --sans:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  --radius:6px 16px 6px 6px; /* brand swatch shape: one generous top-right corner */
+
+  /* dark is the brand's native surface */
+  --bg:var(--slate-deep); --surface:var(--slate); --text:#FFFFFF; --muted:#A3B1B3; --faint:#82949A;
+  --line:#2B3B40; --line-strong:#38494F; --hover:rgba(21,220,150,.045);
+  --accent:var(--mint); --link:var(--mint); --ring:var(--mint); --on-accent:var(--slate);
+  --accent-soft:rgba(21,220,150,.12); --flash:rgba(21,220,150,.22); --pos:var(--mint);
+  --pattern:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22%3E%3Cpath fill=%22#15DC96%22 fill-opacity=%220.055%22 transform=%22translate(17.00 17.28) scale(0.1224)%22 d=%22M89.9 166.7C65.7 166.7 43.9 156.4 29 140.1L150.8 140.1C135.9 156.4 114.1 166.7 89.9 166.7M83.1 8.8L70.9 34.4L46.1 34.4C39.1 34.4 33.3 40.2 33.3 47.2L33.3 131.6L22.2 131.6C13.6 119 8.5 103.9 8.5 87.6C8.5 46.2 41.4 12.1 83.1 8.8M110.4 42.9L133.6 42.9C136 42.9 138 44.8 138 47.2L138 131.6L110.4 131.6ZM77.8 42.9L101.9 42.9L101.9 131.6L77.8 131.6ZM41.8 131.6L41.8 47.2C41.8 44.8 43.8 42.9 46.1 42.9L69.4 42.9L69.4 131.6ZM171.3 87.6C171.3 103.9 166.2 119 157.5 131.6L146.4 131.6L146.4 47.2C146.4 40.2 140.7 34.4 133.6 34.4L80.3 34.4L92.5 8.5C136.2 9.9 171.3 44.8 171.3 87.6M153.4 25.6C136.4 9.1 113.9 0 89.9 0C65.9 0 43.3 9.1 26.4 25.6C9.4 42.2 0 64.2 0 87.6C0 111 9.4 133.1 26.4 149.6C43.3 166.1 65.9 175.2 89.9 175.2C113.9 175.2 136.4 166.1 153.4 149.6C170.4 133.1 179.8 111 179.8 87.6C179.8 64.2 170.4 42.2 153.4 25.6%22/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){
+  --bg:#F4F6F6; --surface:#FFFFFF; --text:var(--slate); --muted:#5B6A6E; --faint:#6A797D;
+  --line:var(--grey); --line-strong:#C9D1D2; --hover:rgba(29,42,46,.035);
+  --link:#087F57; --ring:#087F57; /* mint shaded to 5:1 on white so link text stays legible */
+  --accent-soft:rgba(21,220,150,.16); --flash:rgba(21,220,150,.28); --pos:#087F57;
+  --pattern:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22%3E%3Cpath fill=%22#1D2A2E%22 fill-opacity=%220.05%22 transform=%22translate(17.00 17.28) scale(0.1224)%22 d=%22M89.9 166.7C65.7 166.7 43.9 156.4 29 140.1L150.8 140.1C135.9 156.4 114.1 166.7 89.9 166.7M83.1 8.8L70.9 34.4L46.1 34.4C39.1 34.4 33.3 40.2 33.3 47.2L33.3 131.6L22.2 131.6C13.6 119 8.5 103.9 8.5 87.6C8.5 46.2 41.4 12.1 83.1 8.8M110.4 42.9L133.6 42.9C136 42.9 138 44.8 138 47.2L138 131.6L110.4 131.6ZM77.8 42.9L101.9 42.9L101.9 131.6L77.8 131.6ZM41.8 131.6L41.8 47.2C41.8 44.8 43.8 42.9 46.1 42.9L69.4 42.9L69.4 131.6ZM171.3 87.6C171.3 103.9 166.2 119 157.5 131.6L146.4 131.6L146.4 47.2C146.4 40.2 140.7 34.4 133.6 34.4L80.3 34.4L92.5 8.5C136.2 9.9 171.3 44.8 171.3 87.6M153.4 25.6C136.4 9.1 113.9 0 89.9 0C65.9 0 43.3 9.1 26.4 25.6C9.4 42.2 0 64.2 0 87.6C0 111 9.4 133.1 26.4 149.6C43.3 166.1 65.9 175.2 89.9 175.2C113.9 175.2 136.4 166.1 153.4 149.6C170.4 133.1 179.8 111 179.8 87.6C179.8 64.2 170.4 42.2 153.4 25.6%22/%3E%3C/svg%3E");
+}}
+:root[data-theme=light]{
+  --bg:#F4F6F6; --surface:#FFFFFF; --text:var(--slate); --muted:#5B6A6E; --faint:#6A797D;
+  --line:var(--grey); --line-strong:#C9D1D2; --hover:rgba(29,42,46,.035);
+  --link:#087F57; --ring:#087F57;
+  --accent-soft:rgba(21,220,150,.16); --flash:rgba(21,220,150,.28); --pos:#087F57;
+  --pattern:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22%3E%3Cpath fill=%22#1D2A2E%22 fill-opacity=%220.05%22 transform=%22translate(17.00 17.28) scale(0.1224)%22 d=%22M89.9 166.7C65.7 166.7 43.9 156.4 29 140.1L150.8 140.1C135.9 156.4 114.1 166.7 89.9 166.7M83.1 8.8L70.9 34.4L46.1 34.4C39.1 34.4 33.3 40.2 33.3 47.2L33.3 131.6L22.2 131.6C13.6 119 8.5 103.9 8.5 87.6C8.5 46.2 41.4 12.1 83.1 8.8M110.4 42.9L133.6 42.9C136 42.9 138 44.8 138 47.2L138 131.6L110.4 131.6ZM77.8 42.9L101.9 42.9L101.9 131.6L77.8 131.6ZM41.8 131.6L41.8 47.2C41.8 44.8 43.8 42.9 46.1 42.9L69.4 42.9L69.4 131.6ZM171.3 87.6C171.3 103.9 166.2 119 157.5 131.6L146.4 131.6L146.4 47.2C146.4 40.2 140.7 34.4 133.6 34.4L80.3 34.4L92.5 8.5C136.2 9.9 171.3 44.8 171.3 87.6M153.4 25.6C136.4 9.1 113.9 0 89.9 0C65.9 0 43.3 9.1 26.4 25.6C9.4 42.2 0 64.2 0 87.6C0 111 9.4 133.1 26.4 149.6C43.3 166.1 65.9 175.2 89.9 175.2C113.9 175.2 136.4 166.1 153.4 149.6C170.4 133.1 179.8 111 179.8 87.6C179.8 64.2 170.4 42.2 153.4 25.6%22/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 13.5px/1.55 var(--sans)}
+::selection{background:var(--mint);color:var(--slate)}
+a{color:inherit;text-decoration:none}
+a:hover{color:var(--link)}
+a.mono{color:var(--link)}
+a.mono:hover{text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--ring);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono);font-size:12.5px;letter-spacing:-.01em}
+.muted{color:var(--muted)} .faint{color:var(--faint)}
+.num{font-family:var(--display);font-weight:500;font-feature-settings:"tnum" 1,"lnum" 1}
+
+/* header */
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:18px;height:60px}
+.brand{display:flex;align-items:center;gap:12px;white-space:nowrap;color:var(--text)}
+.brand:hover{color:var(--text)}
+.logo{display:block;height:22px;width:auto}
+.logo .mark{fill:var(--mint)}
+.logo .word{fill:currentColor}
+.product{font:600 10.5px/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-left:12px;border-left:1px solid var(--line-strong);line-height:18px}
+form.search{flex:1;max-width:440px;margin-left:auto;position:relative}
+form.search input{width:100%;height:36px;padding:0 34px 0 14px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--text);font:inherit}
+form.search input::placeholder{color:var(--faint)}
+form.search input:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 3px var(--accent-soft)}
+form.search kbd{position:absolute;right:9px;top:8px;font:11px var(--mono);color:var(--faint);border:1px solid var(--line-strong);border-radius:4px;padding:0 5px;line-height:18px}
+.head{display:flex;align-items:center;gap:8px;color:var(--muted);white-space:nowrap;font:600 10.5px var(--display);letter-spacing:.1em;text-transform:uppercase}
+.head .num{font-size:13px;letter-spacing:0;color:var(--text);font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--mint);position:relative}
+.dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--mint);opacity:0;animation:ping 2.4s ease-out infinite}
+@keyframes ping{0%{transform:scale(.5);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+.iconbtn{border:1px solid transparent;background:none;color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;display:grid;place-items:center}
+.iconbtn:hover{border-color:var(--line-strong);color:var(--mint)}
+
+main.wrap{padding-top:30px;padding-bottom:72px;min-height:70vh}
+/* brand: headlines in Montserrat Bold / Semibold capitals */
+h1{font:700 22px/1.2 var(--display);letter-spacing:.02em;text-transform:uppercase;margin:0}
+h1 .num{font-weight:700}
+h1.mono{font-family:var(--mono);text-transform:none;letter-spacing:-.01em;font-weight:600}
+h2{font:600 11.5px var(--display);letter-spacing:.12em;text-transform:uppercase;margin:0}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 2px 11px}
+.sechead small{color:var(--faint);font-size:12px}
+.sechead h2::before{content:"";display:inline-block;width:6px;height:6px;border-radius:1px 3px 1px 1px;background:var(--mint);margin-right:9px;vertical-align:1px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);margin-bottom:30px}
+.stat{padding:15px 18px;border-left:1px solid var(--line);min-width:0}
+.stat:first-child{border-left:0}
+.stat label{display:block;font:600 10px var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stat b{font:600 21px var(--display);font-feature-settings:"tnum" 1;letter-spacing:-.01em}
+.stat .row{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
+.spark{display:block;color:var(--mint)}
+
+/* layout */
+.cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:30px}
+.card{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+
+/* tables */
+table{width:100%;border-collapse:collapse}
+th{font:600 10px var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--hover)}
+.r{text-align:right}
+td.haiku{max-width:0;width:40%;overflow:hidden;text-overflow:ellipsis;font:italic 300 12.5px var(--sans);color:var(--faint)}
+tr.new{animation:flash 2.4s ease-out}
+@keyframes flash{from{background:var(--flash)}to{background:transparent}}
+.tag{display:inline-block;font:600 9px/16px var(--display);letter-spacing:.1em;text-transform:uppercase;padding:0 6px;border-radius:3px 6px 3px 3px;border:1px solid var(--line-strong);color:var(--muted);margin-left:8px;vertical-align:2px}
+.tag.acc{border-color:transparent;background:var(--accent-soft);color:var(--link)}
+.amt .dec{color:var(--muted);font-weight:400}
+.amt.pos{color:var(--pos)} .amt.pos .dec{color:inherit;opacity:.75}
+.unit{font:500 10px var(--display);letter-spacing:.06em;color:var(--faint);margin-left:4px}
+
+/* list (sidebar) */
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list li>div:first-child{min-width:0}
+.list .sub{font-size:12px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list .sub a.mono{color:var(--muted)}
+.list .sub a.mono:hover{color:var(--link)}
+.empty{padding:18px 14px;color:var(--faint)}
+.stack{display:grid;gap:30px;align-content:start}
+
+/* detail pages */
+.pagehead{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px;flex-wrap:wrap}
+.crumb{font:600 10.5px var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.crumb a:hover{color:var(--link)}
+.nav{display:flex;gap:6px}
+.btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--text);font:600 12px var(--display);font-feature-settings:"tnum" 1;cursor:pointer}
+.btn:hover{border-color:var(--mint);color:var(--link)}
+.btn[aria-disabled=true]{opacity:.35;pointer-events:none}
+.btn.primary{background:var(--mint);border-color:var(--mint);color:var(--slate);letter-spacing:.08em;text-transform:uppercase;font-size:11px}
+.btn.primary:hover{background:var(--mint-deep);border-color:var(--mint-deep);color:var(--slate)}
+.sub-h{color:var(--muted);margin:0 0 24px}
+.detail{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:30px;margin-bottom:34px}
+dl.kv{display:grid;grid-template-columns:150px minmax(0,1fr);margin:0}
+dl.kv dt,dl.kv dd{padding:10px 14px;border-bottom:1px solid var(--line);margin:0;min-width:0}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{overflow-wrap:anywhere}
+dl.kv > :nth-last-child(-n+2){border-bottom:0}
+aside.poem{padding:20px 22px;border-top:3px solid var(--mint)}
+aside.poem p{font:italic 300 18px/1.65 var(--sans);margin:0 0 14px;white-space:pre-line}
+aside.poem small{color:var(--faint);font-size:12px;display:block}
+.copy{border:0;background:none;color:var(--faint);cursor:pointer;padding:0 4px;font:600 9.5px var(--display);letter-spacing:.1em;text-transform:uppercase}
+.copy:hover{color:var(--link)}
+.big{font:600 30px var(--display);font-feature-settings:"tnum" 1;letter-spacing:-.01em}
+.note-inline{font:400 12px/1.5 var(--sans);letter-spacing:0;color:var(--faint);margin-top:4px}
+.note{font-size:12.5px;color:var(--muted);padding:12px 14px;border-top:1px solid var(--line);background:var(--hover)}
+.skel{display:inline-block;height:10px;width:70%;border-radius:4px;background:var(--line);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.5}}
+.err{padding:40px 0;color:var(--muted)}
+.err b{color:var(--text);display:block;font:700 16px var(--display);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+footer{border-top:1px solid var(--line);padding:26px 0 44px;color:var(--faint);font-size:12px;background:var(--surface) var(--pattern) repeat;background-position:center top}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer .logo{height:16px;color:var(--text)}
+footer a:hover{color:var(--link)}
+
+@media (max-width:860px){
+  .cols,.detail{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-left:0;border-top:1px solid var(--line)}
+  .stat:nth-child(-n+2){border-top:0}
+  .stat:nth-child(even){border-left:1px solid var(--line)}
+  .stat:last-child{grid-column:1/-1;border-left:0}
+  .hide-sm{display:none}
+  dl.kv{grid-template-columns:110px minmax(0,1fr)}
+  .product{display:none}
+}
+@media (max-width:560px){
+  .wrap{padding:0 16px}
+  .head, form.search kbd{display:none}
+  .bar{gap:12px}
+  .logo{height:18px}
+  th,td{padding:9px 10px}
+  .hide-xs{display:none}
+}
+@media (prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#/" aria-label="Mochimo Explorer, home">
+      <svg class="logo" viewBox="0 0 781.8 175.2" aria-hidden="true" focusable="false"><path class="mark" d="M89.9 166.7C65.7 166.7 43.9 156.4 29 140.1L150.8 140.1C135.9 156.4 114.1 166.7 89.9 166.7M83.1 8.8L70.9 34.4L46.1 34.4C39.1 34.4 33.3 40.2 33.3 47.2L33.3 131.6L22.2 131.6C13.6 119 8.5 103.9 8.5 87.6C8.5 46.2 41.4 12.1 83.1 8.8M110.4 42.9L133.6 42.9C136 42.9 138 44.8 138 47.2L138 131.6L110.4 131.6ZM77.8 42.9L101.9 42.9L101.9 131.6L77.8 131.6ZM41.8 131.6L41.8 47.2C41.8 44.8 43.8 42.9 46.1 42.9L69.4 42.9L69.4 131.6ZM171.3 87.6C171.3 103.9 166.2 119 157.5 131.6L146.4 131.6L146.4 47.2C146.4 40.2 140.7 34.4 133.6 34.4L80.3 34.4L92.5 8.5C136.2 9.9 171.3 44.8 171.3 87.6M153.4 25.6C136.4 9.1 113.9 0 89.9 0C65.9 0 43.3 9.1 26.4 25.6C9.4 42.2 0 64.2 0 87.6C0 111 9.4 133.1 26.4 149.6C43.3 166.1 65.9 175.2 89.9 175.2C113.9 175.2 136.4 166.1 153.4 149.6C170.4 133.1 179.8 111 179.8 87.6C179.8 64.2 170.4 42.2 153.4 25.6"/><path class="word" d="M301.4 37.8L301.4 118.5L290.9 118.5L290.9 58.4L288.7 64.4L264 118.5L255.6 118.5L231 64.4L228.9 58.4L228.9 118.5L218.4 118.5L218.4 37.8L229.9 37.8L257.6 97.1L259.8 102.3L262.1 97.1L289.9 37.8ZM333.7 55.2C328.1 61.2 325.3 68.8 325.3 78C325.3 87.4 328.1 95 333.7 101.1C339.4 107.2 346.8 110.2 355.6 110.2C364.5 110.2 371.7 107.2 377.3 101.1C383 95 385.9 87.4 385.9 78C385.9 68.8 383 61.2 377.3 55.2C371.7 49.1 364.5 46.1 355.6 46.1C346.8 46.1 339.4 49.1 333.7 55.2M385.2 48.2C392.9 56.1 396.8 66 396.8 78C396.8 90.2 392.9 100.2 385.2 108.2C377.4 116.1 367.5 120 355.6 120C343.6 120 333.7 116.1 326 108.2C318.3 100.2 314.3 90.2 314.3 78C314.3 66 318.3 56.1 326 48.2C333.7 40.2 343.6 36.3 355.6 36.3C367.5 36.3 377.4 40.2 385.2 48.2M482.3 61.8L470.7 61.8C466.8 51.3 458.8 46.1 446.4 46.1C438 46.1 431 49.1 425.5 55.2C420.1 61.2 417.5 68.8 417.5 78.2C417.5 87.4 420.1 95 425.5 101.1C431 107.2 438 110.2 446.5 110.2C459.3 110.2 467.8 103.9 471.1 94.2L482.4 94.2C477.8 110.7 465.3 120 446.5 120C434.9 120 425.2 116.1 417.7 108.2C410.2 100.2 406.5 90.3 406.5 78.2C406.5 66 410.2 56.1 417.7 48.2C425.2 40.2 434.8 36.3 446.4 36.3C465 36.3 477.7 45.7 482.3 61.8M558 37.8L558 118.5L547.5 118.5L547.5 81.7L504.8 81.7L504.8 118.5L494.3 118.5L494.3 37.8L504.8 37.8L504.8 71.8L547.5 71.8L547.5 37.8ZM585.9 118.5L575.4 118.5L575.4 37.8L585.9 37.8ZM686.4 37.8L686.4 118.5L675.9 118.5L675.9 58.4L673.7 64.4L649 118.5L640.6 118.5L616 64.4L613.8 58.4L613.8 118.5L603.3 118.5L603.3 37.8L614.9 37.8L642.5 97.1L644.7 102.3L647 97.1L674.8 37.8ZM718.7 55.2C713 61.2 710.3 68.8 710.3 78C710.3 87.4 713 95 718.7 101.1C724.3 107.2 731.7 110.2 740.6 110.2C749.5 110.2 756.6 107.2 762.3 101.1C767.9 95 770.8 87.4 770.8 78C770.8 68.8 767.9 61.2 762.3 55.2C756.6 49.1 749.5 46.1 740.6 46.1C731.7 46.1 724.3 49.1 718.7 55.2M770.1 48.2C777.9 56.1 781.8 66 781.8 78C781.8 90.2 777.9 100.2 770.1 108.2C762.4 116.1 752.5 120 740.6 120C728.6 120 718.7 116.1 711 108.2C703.2 100.2 699.3 90.2 699.3 78C699.3 66 703.2 56.1 711 48.2C718.7 40.2 728.6 36.3 740.6 36.3C752.5 36.3 762.4 40.2 770.1 48.2"/></svg>
+      <span class="product">Explorer</span>
+    </a>
+    <form class="search" role="search">
+      <input id="q" name="q" autocomplete="off" spellcheck="false" placeholder="Block, tx hash, or address" aria-label="Search">
+      <kbd>/</kbd>
+    </form>
+    <a class="head" href="#/" title="Chain height"><span class="dot"></span><span class="lbl">Height</span> <span id="height" class="num">…</span></a>
+    <button class="iconbtn" id="theme" title="Toggle theme" aria-label="Toggle theme">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+<main class="wrap" id="app"></main>
+<footer><div class="wrap"><svg class="logo" viewBox="0 0 781.8 175.2" aria-hidden="true" focusable="false"><path class="mark" d="M89.9 166.7C65.7 166.7 43.9 156.4 29 140.1L150.8 140.1C135.9 156.4 114.1 166.7 89.9 166.7M83.1 8.8L70.9 34.4L46.1 34.4C39.1 34.4 33.3 40.2 33.3 47.2L33.3 131.6L22.2 131.6C13.6 119 8.5 103.9 8.5 87.6C8.5 46.2 41.4 12.1 83.1 8.8M110.4 42.9L133.6 42.9C136 42.9 138 44.8 138 47.2L138 131.6L110.4 131.6ZM77.8 42.9L101.9 42.9L101.9 131.6L77.8 131.6ZM41.8 131.6L41.8 47.2C41.8 44.8 43.8 42.9 46.1 42.9L69.4 42.9L69.4 131.6ZM171.3 87.6C171.3 103.9 166.2 119 157.5 131.6L146.4 131.6L146.4 47.2C146.4 40.2 140.7 34.4 133.6 34.4L80.3 34.4L92.5 8.5C136.2 9.9 171.3 44.8 171.3 87.6M153.4 25.6C136.4 9.1 113.9 0 89.9 0C65.9 0 43.3 9.1 26.4 25.6C9.4 42.2 0 64.2 0 87.6C0 111 9.4 133.1 26.4 149.6C43.3 166.1 65.9 175.2 89.9 175.2C113.9 175.2 136.4 166.1 153.4 149.6C170.4 133.1 179.8 111 179.8 87.6C179.8 64.2 170.4 42.2 153.4 25.6"/><path class="word" d="M301.4 37.8L301.4 118.5L290.9 118.5L290.9 58.4L288.7 64.4L264 118.5L255.6 118.5L231 64.4L228.9 58.4L228.9 118.5L218.4 118.5L218.4 37.8L229.9 37.8L257.6 97.1L259.8 102.3L262.1 97.1L289.9 37.8ZM333.7 55.2C328.1 61.2 325.3 68.8 325.3 78C325.3 87.4 328.1 95 333.7 101.1C339.4 107.2 346.8 110.2 355.6 110.2C364.5 110.2 371.7 107.2 377.3 101.1C383 95 385.9 87.4 385.9 78C385.9 68.8 383 61.2 377.3 55.2C371.7 49.1 364.5 46.1 355.6 46.1C346.8 46.1 339.4 49.1 333.7 55.2M385.2 48.2C392.9 56.1 396.8 66 396.8 78C396.8 90.2 392.9 100.2 385.2 108.2C377.4 116.1 367.5 120 355.6 120C343.6 120 333.7 116.1 326 108.2C318.3 100.2 314.3 90.2 314.3 78C314.3 66 318.3 56.1 326 48.2C333.7 40.2 343.6 36.3 355.6 36.3C367.5 36.3 377.4 40.2 385.2 48.2M482.3 61.8L470.7 61.8C466.8 51.3 458.8 46.1 446.4 46.1C438 46.1 431 49.1 425.5 55.2C420.1 61.2 417.5 68.8 417.5 78.2C417.5 87.4 420.1 95 425.5 101.1C431 107.2 438 110.2 446.5 110.2C459.3 110.2 467.8 103.9 471.1 94.2L482.4 94.2C477.8 110.7 465.3 120 446.5 120C434.9 120 425.2 116.1 417.7 108.2C410.2 100.2 406.5 90.3 406.5 78.2C406.5 66 410.2 56.1 417.7 48.2C425.2 40.2 434.8 36.3 446.4 36.3C465 36.3 477.7 45.7 482.3 61.8M558 37.8L558 118.5L547.5 118.5L547.5 81.7L504.8 81.7L504.8 118.5L494.3 118.5L494.3 37.8L504.8 37.8L504.8 71.8L547.5 71.8L547.5 37.8ZM585.9 118.5L575.4 118.5L575.4 37.8L585.9 37.8ZM686.4 37.8L686.4 118.5L675.9 118.5L675.9 58.4L673.7 64.4L649 118.5L640.6 118.5L616 64.4L613.8 58.4L613.8 118.5L603.3 118.5L603.3 37.8L614.9 37.8L642.5 97.1L644.7 102.3L647 97.1L674.8 37.8ZM718.7 55.2C713 61.2 710.3 68.8 710.3 78C710.3 87.4 713 95 718.7 101.1C724.3 107.2 731.7 110.2 740.6 110.2C749.5 110.2 756.6 107.2 762.3 101.1C767.9 95 770.8 87.4 770.8 78C770.8 68.8 767.9 61.2 762.3 55.2C756.6 49.1 749.5 46.1 740.6 46.1C731.7 46.1 724.3 49.1 718.7 55.2M770.1 48.2C777.9 56.1 781.8 66 781.8 78C781.8 90.2 777.9 100.2 770.1 108.2C762.4 116.1 752.5 120 740.6 120C728.6 120 718.7 116.1 711 108.2C703.2 100.2 699.3 90.2 699.3 78C699.3 66 703.2 56.1 711 48.2C718.7 40.2 728.6 36.3 740.6 36.3C752.5 36.3 762.4 40.2 770.1 48.2"/></svg><span>Explorer prototype · data from the public Mochimo Rosetta API</span><a href="https://mochimo.org" rel="noopener">mochimo.org ↗</a></div></footer>
+
+<script>
+"use strict";
+/* ---------- API ---------- */
+const API = "https://api.mochimo.org";
+const NET = { blockchain: "mochimo", network: "mainnet" };
+async function rpc(path, body = {}, signal) {
+  const r = await fetch(API + path, {
+    method: "POST", signal,
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ network_identifier: NET, ...body }),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.code) throw Object.assign(new Error(j.message || r.statusText), { code: j.code });
+  return j;
+}
+const blockCache = new Map();
+async function getBlock(id, signal) {
+  if (typeof id === "number" && blockCache.has(id)) return blockCache.get(id);
+  const ident = typeof id === "number" ? { index: id } : { hash: id };
+  const { block } = await rpc("/block", { block_identifier: ident }, signal);
+  if (state.head - block.block_identifier.index > 2) blockCache.set(block.block_identifier.index, block);
+  return block;
+}
+async function pool(items, n, fn) {
+  const out = new Array(items.length); let i = 0;
+  await Promise.all(Array.from({ length: Math.min(n, items.length) }, async () => {
+    while (i < items.length) { const k = i++; out[k] = await fn(items[k]).catch(() => null); }
+  }));
+  return out;
+}
+
+/* ---------- Mochimo address tags: 20-byte tag + CRC16/XMODEM (LE) -> base58 ---------- */
+const B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+const hexBytes = h => Uint8Array.from(h.replace(/^0x/, "").match(/../g).map(b => parseInt(b, 16)));
+const bytesHex = b => "0x" + [...b].map(x => x.toString(16).padStart(2, "0")).join("");
+function crc16(bytes) {
+  let s = 0;
+  for (const b of bytes) { s ^= b << 8; for (let i = 0; i < 8; i++) s = s & 0x8000 ? ((s << 1) ^ 0x1021) & 0xffff : (s << 1) & 0xffff; }
+  return s;
+}
+function b58enc(bytes) {
+  let n = 0n; for (const b of bytes) n = n * 256n + BigInt(b);
+  let s = ""; while (n > 0n) { s = B58[Number(n % 58n)] + s; n /= 58n; }
+  for (const b of bytes) { if (b) break; s = "1" + s; }
+  return s;
+}
+function b58dec(str) {
+  let n = 0n; for (const c of str) { const i = B58.indexOf(c); if (i < 0) return null; n = n * 58n + BigInt(i); }
+  const out = []; while (n > 0n) { out.unshift(Number(n % 256n)); n /= 256n; }
+  for (const c of str) { if (c !== "1") break; out.unshift(0); }
+  return Uint8Array.from(out);
+}
+function tag58(hex) {
+  const t = hexBytes(hex), c = crc16(t), b = new Uint8Array(22);
+  b.set(t); b[20] = c & 255; b[21] = c >> 8;
+  return b58enc(b);
+}
+function toHexTag(q) {
+  q = q.trim();
+  if (/^(0x)?[0-9a-f]{40}$/i.test(q)) return "0x" + q.replace(/^0x/i, "").toLowerCase();
+  const d = b58dec(q.replace(/^0x/, ""));
+  if (d && d.length === 22) { const t = d.slice(0, 20), c = crc16(t); if (d[20] === (c & 255) && d[21] === c >> 8) return bytesHex(t); }
+  return null;
+}
+
+/* ---------- formatting ---------- */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const int = n => Number(n).toLocaleString("en-US");
+const short = (h, a = 6, b = 4) => h.length > a + b + 3 ? h.slice(0, a + 2) + "…" + h.slice(-b) : h;
+function mcm(v, sign = false) {
+  let n = BigInt(v); const neg = n < 0n; if (neg) n = -n;
+  const i = n / 1000000000n, f = (n % 1000000000n).toString().padStart(9, "0").replace(/0+$/, "");
+  const cls = neg ? " neg" : sign && n > 0n ? " pos" : "";
+  return `<span class="amt num${cls}">${neg ? "−" : sign && n > 0n ? "+" : ""}${int(i)}${f ? `<span class="dec">.${f}</span>` : ""}</span>`;
+}
+function ago(ms) {
+  const s = Math.max(0, Math.round((Date.now() - ms) / 1000));
+  if (s < 60) return s + "s";
+  const m = Math.floor(s / 60); if (m < 60) return m + "m " + (s % 60 + "").padStart(2, "0") + "s";
+  const h = Math.floor(m / 60); if (h < 48) return h + "h " + (m % 60) + "m";
+  return Math.floor(h / 24) + "d";
+}
+const ageEl = ms => `<span class="num" data-ts="${ms}">${ago(ms)}</span>`;
+const addrLink = (hex, a = 6, b = 4) => { const t = tag58(hex); return `<a class="mono" href="#/address/${t}" title="${t}">${esc(t.length > a + b + 1 ? t.slice(0, a) + "…" + t.slice(-b) : t)}</a>`; };
+const txLink = h => `<a class="mono" href="#/tx/${h}" title="${h}">${short(h, 8, 6)}</a>`;
+const blockLink = i => `<a class="num" href="#/block/${i}">${int(i)}</a>`;
+const copyBtn = v => `<button class="copy" data-copy="${esc(v)}" title="Copy">copy</button>`;
+const isPseudo = b => b.metadata && b.metadata.tx_count === 0 && /^0x0+$/.test(b.metadata.nonce || "") && b.block_identifier.index % 256 !== 0;
+const kind = b => b.block_identifier.index % 256 === 0 ? `<span class="tag acc" title="Every 256th block summarises the ledger so old history can be pruned">neogenesis</span>`
+  : isPseudo(b) ? `<span class="tag" title="Empty block issued when no solution is found in time">pseudo</span>` : "";
+
+/* summarise a Rosetta tx into from / to[] / amount / fee */
+function summarise(tx) {
+  const ops = tx.operations || [];
+  const src = ops.find(o => o.type === "SOURCE_TRANSFER");
+  const dst = ops.filter(o => o.type === "DESTINATION_TRANSFER");
+  const fee = ops.find(o => o.type === "FEE");
+  const rew = ops.find(o => o.type === "REWARD");
+  const sent = dst.reduce((a, o) => a + BigInt(o.amount.value), 0n);
+  return { hash: tx.transaction_identifier.hash, src, dst, fee, rew, sent, status: (src || dst[0] || rew || {}).status, meta: src?.metadata || {} };
+}
+
+/* ---------- state + live updates ---------- */
+const state = { head: 0, headTs: 0, recent: [], mempool: [] };
+const subs = new Set();
+async function poll() {
+  try {
+    const s = await rpc("/network/status");
+    const h = s.current_block_identifier.index;
+    const changed = h !== state.head;
+    state.head = h; state.headTs = s.current_block_timestamp;
+    document.getElementById("height").textContent = int(h);
+    if (changed) subs.forEach(fn => fn());
+  } catch {}
+}
+let pollTimer;
+function startPolling() { clearInterval(pollTimer); poll(); pollTimer = setInterval(poll, 10000); }
+document.addEventListener("visibilitychange", () => document.hidden ? clearInterval(pollTimer) : startPolling());
+setInterval(() => document.querySelectorAll("[data-ts]").forEach(el => el.textContent = ago(+el.dataset.ts)), 1000);
+
+/* ---------- views ---------- */
+const app = document.getElementById("app");
+let ctl = new AbortController();
+const skelRows = (n, cols) => Array.from({ length: n }, () => `<tr>${Array.from({ length: cols }, () => `<td><span class="skel"></span></td>`).join("")}</tr>`).join("");
+
+function blockRow(b, isNew) {
+  const m = b.metadata || {};
+  const haiku = (m.haiku || "").trim().replace(/\s*\n\s*/g, " / ");
+  return `<tr class="${isNew ? "new" : ""}">
+    <td>${blockLink(b.block_identifier.index)}${kind(b)}</td>
+    <td class="muted">${ageEl(b.timestamp)}</td>
+    <td class="r num">${m.tx_count ?? "–"}</td>
+    <td class="r num hide-xs">${m.difficulty ?? "–"}</td>
+    <td class="haiku hide-sm" title="${esc(m.haiku || "")}">${esc(haiku)}</td></tr>`;
+}
+function spark(blocks) {
+  const ts = blocks.map(b => b.timestamp).sort((a, b) => a - b);
+  const d = ts.slice(1).map((t, i) => (t - ts[i]) / 1000).slice(-24);
+  if (d.length < 2) return "";
+  const max = Math.max(...d), w = 4, gap = 2, H = 22;
+  return `<svg class="spark" width="${d.length * (w + gap)}" height="${H}" aria-hidden="true">${d.map((v, i) => { const h = Math.max(2, v / max * H); return `<rect x="${i * (w + gap)}" y="${H - h}" width="${w}" height="${h}" rx="1" fill="currentColor"/>`; }).join("")}</svg>`;
+}
+
+async function home() {
+  document.title = "Mochimo Explorer";
+  app.innerHTML = `
+    <section class="stats" aria-label="Network">
+      <div class="stat"><label>Block height</label><b class="num" id="s-h">…</b></div>
+      <div class="stat"><label>Last block</label><b id="s-last">…</b></div>
+      <div class="stat"><label>Avg block time</label><div class="row"><b class="num" id="s-avg">…</b><span id="s-spark"></span></div></div>
+      <div class="stat"><label>Difficulty</label><b class="num" id="s-diff">…</b></div>
+      <div class="stat"><label>Pending txs</label><b class="num" id="s-mp">…</b></div>
+    </section>
+    <div class="cols">
+      <section>
+        <div class="sechead"><h2>Latest blocks</h2><small>updates live</small></div>
+        <div class="card"><table><thead><tr><th>Block</th><th>Age</th><th class="r">Txs</th><th class="r hide-xs">Diff</th><th class="hide-sm">Haiku</th></tr></thead>
+        <tbody id="blocks">${skelRows(12, 5)}</tbody></table></div>
+      </section>
+      <div class="stack">
+        <section><div class="sechead"><h2>Pending</h2><small>mempool</small></div><div class="card"><ul class="list" id="mp"><li><span class="skel"></span></li></ul></div></section>
+        <section><div class="sechead"><h2>Latest transfers</h2></div><div class="card"><ul class="list" id="xfers"><li><span class="skel"></span></li></ul></div></section>
+      </div>
+    </div>`;
+  const signal = ctl.signal;
+  if (!state.head) await poll();
+
+  const render = (fresh = new Set()) => {
+    const bl = state.recent;
+    const tb = document.getElementById("blocks"); if (!tb) return;
+    tb.innerHTML = bl.map(b => blockRow(b, fresh.has(b.block_identifier.index))).join("");
+    const top = bl[0];
+    document.getElementById("s-h").textContent = int(state.head);
+    document.getElementById("s-last").innerHTML = top ? ageEl(top.timestamp) + ' <span class="unit">ago</span>' : "–";
+    const span = bl.length > 1 ? (bl[0].timestamp - bl[bl.length - 1].timestamp) / 1000 / (bl.length - 1) : 0;
+    document.getElementById("s-avg").innerHTML = span ? Math.round(span) + '<span class="unit">s</span>' : "–";
+    document.getElementById("s-spark").innerHTML = spark(bl);
+    document.getElementById("s-diff").textContent = top?.metadata?.difficulty ?? "–";
+    const xs = bl.flatMap(b => (b.transactions || []).map(summarise).filter(t => t.src).map(t => ({ ...t, b }))).slice(0, 8);
+    document.getElementById("xfers").innerHTML = xs.length ? xs.map(t => `<li><div>${txLink(t.hash)}<div class="sub">${addrLink(t.src.account.address)} → ${t.dst[0] ? addrLink(t.dst[0].account.address) : "?"}${t.dst.length > 1 ? ` +${t.dst.length - 1}` : ""}</div></div><div class="r">${mcm(t.sent)}<span class="unit">MCM</span><div class="sub">${ageEl(t.b.timestamp)} ago</div></div></li>`).join("") : `<li class="empty">No transfers in recent blocks</li>`;
+  };
+
+  const loadBlocks = async () => {
+    const have = new Set(state.recent.map(b => b.block_identifier.index));
+    const want = []; for (let i = state.head; i > state.head - 16 && i >= 0; i--) if (!have.has(i)) want.push(i);
+    const got = (await pool(want, 6, i => getBlock(i, signal))).filter(Boolean);
+    const fresh = new Set(have.size ? got.map(b => b.block_identifier.index) : []);
+    state.recent = [...got, ...state.recent].sort((a, b) => b.block_identifier.index - a.block_identifier.index).slice(0, 16);
+    render(fresh);
+  };
+  const loadMempool = async () => {
+    try {
+      const { transaction_identifiers: ids = [] } = await rpc("/mempool", {}, signal);
+      const txs = (await pool(ids.slice(0, 8), 4, id => rpc("/mempool/transaction", { transaction_identifier: id }, signal))).filter(Boolean).map(r => summarise(r.transaction));
+      const el = document.getElementById("mp"); if (!el) return;
+      document.getElementById("s-mp").textContent = ids.length;
+      el.innerHTML = txs.length ? txs.map(t => `<li><div>${txLink(t.hash)}<div class="sub">${t.src ? addrLink(t.src.account.address) : ""} → ${t.dst[0] ? addrLink(t.dst[0].account.address) : "?"}</div></div><div class="r">${mcm(t.sent)}<span class="unit">MCM</span></div></li>`).join("") : `<li class="empty">Mempool is empty</li>`;
+    } catch {}
+  };
+  const refresh = () => Promise.all([loadBlocks(), loadMempool()]);
+  subs.add(refresh); signal.addEventListener("abort", () => subs.delete(refresh));
+  if (state.recent.length) render();
+  refresh();
+}
+
+async function blockPage(id) {
+  const signal = ctl.signal;
+  const num = /^\d+$/.test(id) ? +id : null;
+  app.innerHTML = `<div class="crumb"><a href="#/">Blocks</a> /</div><h1>Block ${num !== null ? int(num) : short(id)}</h1><p class="sub-h"><span class="skel" style="width:180px"></span></p>`;
+  let b;
+  try { b = await getBlock(num ?? id, signal); } catch (e) { if (!signal.aborted) notFound("Block not found", id); return; }
+  if (signal.aborted) return;
+  const i = b.block_identifier.index, m = b.metadata || {};
+  document.title = `Block ${int(i)} · Mochimo Explorer`;
+  const txs = (b.transactions || []).map(summarise);
+  const reward = txs.find(t => t.rew);
+  const transfers = txs.filter(t => t.src);
+  app.innerHTML = `
+    <div class="crumb"><a href="#/">Blocks</a> /</div>
+    <div class="pagehead"><h1>Block <span class="num">${int(i)}</span>${kind(b)}</h1>
+      <div class="nav"><a class="btn" href="#/block/${i - 1}" aria-disabled="${i === 0}" title="Previous (←)">← ${int(i - 1)}</a><a class="btn" href="#/block/${i + 1}" aria-disabled="${i >= state.head}" title="Next (→)">${int(i + 1)} →</a></div></div>
+    <p class="sub-h">${new Date(b.timestamp).toLocaleString()} · ${ageEl(b.timestamp)} ago · ${int(m.tx_count ?? transfers.length)} transaction${m.tx_count === 1 ? "" : "s"}</p>
+    <div class="detail">
+      <div class="card"><dl class="kv">
+        <dt>Hash</dt><dd class="mono">${b.block_identifier.hash} ${copyBtn(b.block_identifier.hash)}</dd>
+        <dt>Parent</dt><dd class="mono">${i > 0 ? `<a href="#/block/${i - 1}">${b.parent_block_identifier.hash}</a>` : "—"}</dd>
+        <dt>Difficulty</dt><dd class="num">${m.difficulty ?? "–"}</dd>
+        <dt>Size</dt><dd class="num">${m.block_size != null ? int(m.block_size) + " bytes" : "–"}</dd>
+        <dt>Miner reward</dt><dd>${reward ? `${mcm(reward.rew.amount.value)}<span class="unit">MCM</span> → ${addrLink(reward.rew.account.address, 40)}` : "—"}</dd>
+        <dt>Fee per tx</dt><dd>${m.fee != null ? `${mcm(m.fee)}<span class="unit">MCM</span>` : "–"}</dd>
+        <dt>Merkle root</dt><dd class="mono">${esc(m.root || "–")}</dd>
+        <dt>Nonce</dt><dd class="mono faint">${esc(m.nonce || "–")}</dd>
+      </dl></div>
+      ${m.haiku && m.haiku.trim() ? `<aside class="card poem"><p>${esc(m.haiku.trim().replace(/\s*\n\s*/g, "\n"))}</p><small>Haiku decoded from this block's proof-of-work nonce.</small></aside>`
+        : `<aside class="card poem"><small>${isPseudo(b) ? "Pseudo-block: no proof-of-work, so no haiku." : i % 256 === 0 ? "Neogenesis block: a ledger snapshot, not a mined block." : "No haiku for this block."}</small></aside>`}
+    </div>
+    <div class="sechead"><h2>Transfers</h2><small>${transfers.length}</small></div>
+    <div class="card">${transfers.length ? txTable(transfers) : `<div class="empty">No transfers in this block.</div>`}</div>`;
+}
+function txTable(ts) {
+  return `<table><thead><tr><th>Tx</th><th>From</th><th></th><th>To</th><th class="r">Amount <span class="unit">MCM</span></th><th class="r hide-sm">Fee</th></tr></thead><tbody>${ts.map(t => `
+    <tr><td>${txLink(t.hash)}</td><td>${addrLink(t.src.account.address)}</td><td class="faint">→</td>
+    <td>${t.dst[0] ? addrLink(t.dst[0].account.address) : "–"}${t.dst.length > 1 ? `<span class="tag">+${t.dst.length - 1}</span>` : ""}</td>
+    <td class="r">${mcm(t.sent)}</td><td class="r hide-sm">${t.fee ? mcm(t.fee.amount.value) : "–"}</td></tr>`).join("")}</tbody></table>`;
+}
+
+async function txPage(hash) {
+  const signal = ctl.signal;
+  document.title = `Tx ${short(hash)} · Mochimo Explorer`;
+  app.innerHTML = `<div class="crumb">Transaction</div><h1 class="mono" style="font-size:16px">${esc(hash)}</h1><p class="sub-h"><span class="skel" style="width:220px"></span></p>`;
+  let tx, blk, pending = false;
+  try {
+    const r = await rpc("/search/transactions", { transaction_identifier: { hash } }, signal);
+    if (r.transactions?.length) { tx = r.transactions[0].transaction || r.transactions[0]; blk = r.transactions[0].block_identifier; }
+  } catch {}
+  if (!tx) { try { tx = (await rpc("/mempool/transaction", { transaction_identifier: { hash } }, signal)).transaction; pending = true; } catch {} }
+  if (signal.aborted) return;
+  if (!tx) return notFound("Transaction not found", hash);
+  const t = summarise(tx);
+  app.innerHTML = `
+    <div class="crumb">Transaction</div>
+    <div class="pagehead"><h1 class="mono" style="font-size:16px;overflow-wrap:anywhere">${esc(hash)} ${copyBtn(hash)}</h1></div>
+    <p class="sub-h">${pending ? `<span class="tag acc" style="margin:0">pending</span> in mempool` : `<span class="tag acc" style="margin:0">${esc((t.status || "").toLowerCase())}</span> in block ${blockLink(blk.index)}`}</p>
+    <div class="detail">
+      <div class="card"><dl class="kv">
+        <dt>From</dt><dd>${t.src ? addrLink(t.src.account.address, 40) : "–"}</dd>
+        <dt>Sent</dt><dd>${mcm(t.sent)}<span class="unit">MCM</span></dd>
+        <dt>Fee</dt><dd>${t.fee ? mcm(t.fee.amount.value) + '<span class="unit">MCM</span>' : "–"}</dd>
+        ${t.meta.change_amount && t.meta.change_amount !== "0" ? `<dt>Change</dt><dd>${mcm(t.meta.change_amount)}<span class="unit">MCM</span></dd>` : ""}
+        ${t.meta.from_address_hash ? `<dt>Spent key</dt><dd class="mono faint">${esc(t.meta.from_address_hash)}</dd>` : ""}
+        ${t.meta.change_address_hash ? `<dt>Next key</dt><dd class="mono faint">${esc(t.meta.change_address_hash)}</dd>` : ""}
+      </dl>${t.meta.change_address_hash ? `<div class="note">WOTS+ keys are single-use. Every spend reveals the current key and moves the account tag to a fresh one, so the tag is the address you share.</div>` : ""}</div>
+      <aside class="card"><div class="sechead" style="padding:12px 14px 0"><h2>Recipients</h2><small>${t.dst.length}</small></div>
+        <ul class="list">${t.dst.map(o => `<li>${addrLink(o.account.address, 10, 6)}<span>${mcm(o.amount.value)}${o.metadata?.memo ? `<div class="sub">${esc(o.metadata.memo)}</div>` : ""}</span></li>`).join("") || `<li class="empty">None</li>`}</ul></aside>
+    </div>`;
+}
+
+async function addressPage(q) {
+  const signal = ctl.signal;
+  const hex = toHexTag(decodeURIComponent(q));
+  if (!hex) return notFound("Not a valid Mochimo address", q);
+  const t58 = tag58(hex);
+  document.title = `${short(t58, 6, 4)} · Mochimo Explorer`;
+  app.innerHTML = `
+    <div class="crumb">Address</div>
+    <div class="pagehead"><h1 class="mono" style="font-size:18px;overflow-wrap:anywhere">${t58} ${copyBtn(t58)}</h1></div>
+    <p class="sub-h mono faint">${hex} ${copyBtn(hex)}</p>
+    <div class="stats" style="grid-template-columns:repeat(2,1fr)">
+      <div class="stat"><label>Balance</label><div class="big" id="bal"><span class="skel" style="width:160px;height:22px"></span></div></div>
+      <div class="stat"><label>Transactions</label><div class="big num" id="cnt"><span class="skel" style="width:60px;height:22px"></span></div></div>
+    </div>
+    <div class="sechead"><h2>History</h2><small id="hist-meta"></small></div>
+    <div class="card"><table><thead><tr><th>Block</th><th>Tx</th><th class="hide-xs">Counterparty</th><th class="r">Amount <span class="unit">MCM</span></th></tr></thead>
+      <tbody id="hist">${skelRows(6, 4)}</tbody></table>
+      <div class="note" id="hist-note">Searching the node for this address's history… <span id="elapsed" class="num">0</span>s. The public Rosetta node scans rather than indexes, so this can take 20–40 s. An indexer would answer in milliseconds.</div>
+    </div>`;
+  rpc("/account/balance", { account_identifier: { address: hex } }, signal)
+    .then(r => { document.getElementById("bal").innerHTML = mcm(r.balances[0].value) + '<span class="unit">MCM</span>'; })
+    .catch(e => { if (signal.aborted) return; const el = document.getElementById("bal"); if (el) el.innerHTML = e.code === 4 ? `${mcm(0)}<span class="unit">MCM</span><div class="note-inline">Not in the current ledger. Mochimo drops accounts when their balance reaches zero.</div>` : `<span class="faint">–</span>`; });
+
+  const t0 = Date.now();
+  const tick = setInterval(() => { const el = document.getElementById("elapsed"); el ? el.textContent = Math.round((Date.now() - t0) / 1000) : clearInterval(tick); }, 500);
+  signal.addEventListener("abort", () => clearInterval(tick));
+  let offset = 0;
+  const seen = new Set(); // the node occasionally returns the same tx twice
+  const loadPage = async () => {
+    const r = await rpc("/search/transactions", { account_identifier: { address: hex }, limit: 25, offset }, signal);
+    clearInterval(tick);
+    if (signal.aborted) return;
+    const tb = document.getElementById("hist"); if (!tb) return;
+    if (offset === 0) tb.innerHTML = "";
+    document.getElementById("cnt").textContent = int(r.total_count ?? r.transactions.length);
+    const rows = r.transactions.filter(row => { const k = row.block_identifier.index + (row.transaction_identifier || row.transaction?.transaction_identifier).hash; return !seen.has(k) && seen.add(k); });
+    tb.insertAdjacentHTML("beforeend", rows.map(row => {
+      const tx = row.transaction || row, s = summarise(tx);
+      let net = 0n; for (const o of tx.operations) if (o.account?.address === hex && o.type !== "FEE") net += BigInt(o.amount.value);
+      const cp = net < 0n ? s.dst.find(o => o.account.address !== hex)?.account.address : s.src?.account.address;
+      const label = s.rew && !s.src ? `<span class="tag" style="margin:0">block reward</span>` : cp ? addrLink(cp) : "–";
+      return `<tr><td>${blockLink(row.block_identifier.index)}</td><td>${txLink(s.hash)}</td><td class="hide-xs">${label}</td><td class="r">${mcm(net, true)}</td></tr>`;
+    }).join("") || `<tr><td colspan="4" class="empty">No transactions found.</td></tr>`);
+    offset = r.next_offset;
+    const note = document.getElementById("hist-note");
+    note.innerHTML = offset ? `<button class="btn primary" id="more">Load 25 more</button>` : `<span class="faint">End of history.</span>`;
+    if (offset) document.getElementById("more").onclick = () => { note.innerHTML = `Loading… (the node is slow for this query)`; loadPage().catch(fail); };
+  };
+  const fail = e => { if (signal.aborted) return; const n = document.getElementById("hist-note"); if (n) n.textContent = "Couldn't load history: " + e.message; const tb = document.getElementById("hist"); if (tb && !offset) tb.innerHTML = ""; };
+  loadPage().catch(fail);
+}
+
+async function searchPage(q) {
+  q = decodeURIComponent(q).trim().replace(/,/g, "");
+  app.innerHTML = `<p class="muted">Searching…</p>`;
+  if (/^\d+$/.test(q)) return go(`#/block/${q}`);
+  const tag = toHexTag(q); if (tag) return go(`#/address/${tag58(tag)}`);
+  if (/^(0x)?[0-9a-f]{64}$/i.test(q)) {
+    const h = "0x" + q.replace(/^0x/i, "").toLowerCase();
+    const signal = ctl.signal;
+    try { const b = await getBlock(h, signal); if (!signal.aborted) go(`#/block/${b.block_identifier.index}`); return; } catch {}
+    if (!signal.aborted) go(`#/tx/${h}`);
+    return;
+  }
+  notFound("Nothing matches that search", q);
+}
+function notFound(title, what) {
+  app.innerHTML = `<div class="err"><b>${esc(title)}</b><span class="mono">${esc(what)}</span><p><a class="btn" href="#/">← Latest blocks</a></p></div>`;
+}
+
+/* ---------- router ---------- */
+const routes = [
+  [/^#?\/?$/, home],
+  [/^#\/block\/(\d+|0x[0-9a-f]{64})$/i, blockPage],
+  [/^#\/tx\/(0x[0-9a-f]{64})$/i, txPage],
+  [/^#\/address\/([^/]+)$/, addressPage],
+  [/^#\/search\/(.+)$/, searchPage],
+];
+function go(h) { location.hash === h ? route() : (location.hash = h); }
+function route() {
+  ctl.abort(); ctl = new AbortController();
+  window.scrollTo(0, 0);
+  const h = location.hash || "#/";
+  for (const [re, fn] of routes) { const m = h.match(re); if (m) return fn(m[1]); }
+  notFound("Page not found", h);
+}
+addEventListener("hashchange", route);
+
+/* ---------- chrome ---------- */
+const q = document.getElementById("q");
+document.querySelector("form.search").addEventListener("submit", e => { e.preventDefault(); if (q.value.trim()) { go(`#/search/${encodeURIComponent(q.value.trim())}`); q.value = ""; q.blur(); } });
+addEventListener("keydown", e => {
+  const typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
+  if (e.key === "/" && !typing) { e.preventDefault(); q.focus(); }
+  if (e.key === "Escape" && typing) q.blur();
+  if (!typing && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+    const m = location.hash.match(/^#\/block\/(\d+)$/);
+    if (m) { const n = +m[1] + (e.key === "ArrowLeft" ? -1 : 1); if (n >= 0 && n <= state.head) go(`#/block/${n}`); }
+  }
+});
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  navigator.clipboard?.writeText(b.dataset.copy).then(() => { b.textContent = "copied"; setTimeout(() => b.textContent = "copy", 1200); });
+});
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("theme").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+startPolling();
+route();
+</script>
+</body>
+</html>
